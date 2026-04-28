@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: usermgmt_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: usermanagement
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - usermgmt_net
+
+  redis:
+    image: redis:latest
+    container_name: usermgmt_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - usermgmt_net
+
+  adminer:
+    image: adminer:latest
+    container_name: usermgmt_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - usermgmt_net
+   
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: usermgmt_redisinsight
+    ports:
+      - "5540:5540"
+    networks:
+      - usermgmt_net
+
+volumes:
+  postgres_data:
+
+networks:
+  usermgmt_net:
+    driver: bridge
